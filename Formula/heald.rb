@@ -1,8 +1,8 @@
 class Heald < Formula
   desc "Self-healing macOS system daemon — monitors, repairs, and reports"
   homepage "https://github.com/maf4711/heald"
-  url "https://github.com/maf4711/heald/archive/refs/tags/v1.1.0.tar.gz"
-  sha256 "153695d9ed9785f2bd0a52c31fb2dfa7a3aa7e77ea0ace91d26388d9fe4496a5"
+  url "https://github.com/maf4711/heald/archive/refs/tags/v1.3.0.tar.gz"
+  sha256 "3cf0bc02372bce727801fd26f410ae6ed26456d93c5a9ac819eed90fae3f97ad"
   license "MIT"
 
   depends_on :macos
