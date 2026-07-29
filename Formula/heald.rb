@@ -1,9 +1,9 @@
 class Heald < Formula
-  desc "Self-healing macOS system daemon — monitors, repairs, and reports"
+  desc "Self-healing macOS system daemon — Apple Intelligence on-device"
   homepage "https://github.com/maf4711/heald"
-  url "https://github.com/maf4711/heald/releases/download/v1.3.1/heald"
-  sha256 "881f44ee58b4293b9aa7311099d2c5ee9a5dc6b96d3513a9b6ca7e0fa7a4a138"
-  version "1.3.1"
+  url "https://github.com/maf4711/heald/releases/download/v2.0.0/heald"
+  sha256 "bc1f269ca62362976e64f930db198d9834556d61ee2f4fc24865004f4dcbba9a"
+  version "2.0.0"
   license "MIT"
 
   depends_on :macos
@@ -12,13 +12,12 @@ class Heald < Formula
   def install
     bin.install "heald"
 
-    # Download support files from repo
     system "curl", "-sL", "-o", "com.heald.daemon.plist",
-      "https://raw.githubusercontent.com/maf4711/heald/v1.3.1/launchd/com.heald.daemon.plist"
+      "https://raw.githubusercontent.com/maf4711/heald/v2.0.0/launchd/com.heald.daemon.plist"
     system "curl", "-sL", "-o", "install.sh",
-      "https://raw.githubusercontent.com/maf4711/heald/v1.3.1/install.sh"
+      "https://raw.githubusercontent.com/maf4711/heald/v2.0.0/install.sh"
     system "curl", "-sL", "-o", "uninstall.sh",
-      "https://raw.githubusercontent.com/maf4711/heald/v1.3.1/uninstall.sh"
+      "https://raw.githubusercontent.com/maf4711/heald/v2.0.0/uninstall.sh"
     system "curl", "-sL", "-o", "heald-top",
       "https://raw.githubusercontent.com/maf4711/heald/main/heald-top"
     system "curl", "-sL", "-o", "heald-top-render.py",
@@ -41,6 +40,9 @@ class Heald < Formula
 
   def caveats
     <<~EOS
+      Requires macOS 26+ with Apple Intelligence enabled (on-device AI).
+      No Ollama — same model stack as meisterSiri.
+
       To start heald:
 
         #{prefix}/install.sh
@@ -48,18 +50,20 @@ class Heald < Formula
       Or manually:
 
         cp #{prefix}/com.heald.daemon.plist ~/Library/LaunchAgents/
-        sed -i '' "s|YOUR_API_KEY_HERE|47110815|g" ~/Library/LaunchAgents/com.heald.daemon.plist
+        # set HEALD_API_KEY in the plist EnvironmentVariables
         launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.heald.daemon.plist
 
-      Terminal dashboard (like top):
+      Check:
+        heald doctor
+
+      Terminal dashboard:
         heald-top
 
       Web dashboard: https://heald.merados.com
-      Logs: log stream --predicate 'subsystem=="com.heald.daemon"' --level info
     EOS
   end
 
   test do
-    assert_match "heald", shell_output("#{bin}/heald --version 2>&1", 0)
+    assert_match "2.0.0", shell_output("#{bin}/heald --version 2>&1", 0)
   end
 end
